@@ -54,40 +54,26 @@ iconv -f gbk -t utf-8 meta.html >> meta1.txt
 grep '<input type="hidden" name="inf" value="' ./meta1.txt | sed 's/^.*<input type="hidden" name="inf" value="//g' | sed 's/".*$//g' | sed 's/|/\
 /g' | sed '$d' >> meta2.txt
 
-#	seach #EXTM3U and delete it
-headline=`head -1 ./meta2.txt | tail -1`
-if [ "$headline"="#EXTM3U" ];then
-	echo "meta2.txt has #EXTM3U"
-	sed '1d' ./meta2.txt >> meta3.txt
-else
-	echo "meta2.txt doesn't have #EXTM3U "
-	mv meta2.txt meta3.txt
-fi
-
 #	download the file
-#a_number=1
-array_meta3=(`cat ./meta3.txt`)
-	for m in ${array_meta3[*]};do
-#		ffmpeg -i "$m" -c copy -bsf:a aac_adtstoasc ./$a.mp4
+array_meta2=(`cat ./meta2.txt`)
+	for m in ${array_meta2[*]};do
 		wget "$m" -U mozilla -O "./video/`echo $m|cut -c 64-65`.flv"
-#		((a_number=a_number+1))
 	done
 
 #	join the file
+output_name=`grep '<input type="hidden" name="filename" value="' ./meta1.txt | sed 's/^.*<input type="hidden" name="filename" value="//g' | sed 's/\[.*$//g'`
 array_join=(`ls ./video`)
 	cd ./video 
-	python3.4 ../join_flv.py --output ../join/joined.flv `echo ${array_join[*]}`		
+	python3.4 ../join_flv.py --output ../join/$output_name `echo ${array_join[*]}`		
 	if [ -e "../join/joined.flv" ];
 	then 		
-		echo "join the files is ok"
+		echo " $output_name is ok !"
 	else
-		echo "join the files is filed"
+		echo " $output_name is filed !"
 	fi
 	cd ..
 
 #	clear the buffer file
-rm -f meta.html
-rm -f meta1.txt
-rm -f meta2.txt
-rm -f meta3.txt
-echo "download is ok !"
+#rm -f meta.html
+#rm -f meta1.txt
+#rm -f meta2.txt

@@ -65,16 +65,16 @@ else
 fi
 
 #	download the file
-a_number=1
+#a_number=1
 array_meta3=(`cat ./meta3.txt`)
 	for m in ${array_meta3[*]};do
 #		ffmpeg -i "$m" -c copy -bsf:a aac_adtstoasc ./$a.mp4
-		wget "$m" -U mozilla -O "./video/$a_number.flv"
-		((a_number=a_number+1))
+		wget "$m" -U mozilla -O "./video/`echo $m|cut -c 63-64`.flv"
+#		((a_number=a_number+1))
 	done
 
 #	join the file
-array_join=(`ls -t ./video`)
+array_join=(`ls ./video`)
 	cd ./video 
 	python3.4 ../join_flv.py --output ../join/joined.flv `echo ${array_join[*]}`		
 	if [ -e "../join/joined.flv" ];
@@ -86,8 +86,8 @@ array_join=(`ls -t ./video`)
 	cd ..
 
 #	clear the buffer file
-rm -f meta.html
-rm -f meta1.txt
-rm -f meta2.txt
-rm -f meta3.txt
+#rm -f meta.html
+#rm -f meta1.txt
+#rm -f meta2.txt
+#rm -f meta3.txt
 echo "download is ok !"
