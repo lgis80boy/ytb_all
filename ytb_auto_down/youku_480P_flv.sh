@@ -64,16 +64,17 @@ array_meta2=(`cat ./meta2.txt`)
 output_name=`grep '<input type="hidden" name="filename" value="' ./meta1.txt | sed 's/^.*<input type="hidden" name="filename" value="//g' | sed 's/\[.*$//g'`
 array_join=(`ls ./video`)
 	cd ./video 
-	python3.4 ../join_flv.py --output ../join/$output_name `echo ${array_join[*]}`		
-	if [ -e "../join/joined.flv" ];
+	python3.4 ../join_flv.py --output ../join/$output_name.flv`echo ${array_join[*]}`		
+	if [ -e "../join/$output_name.flv" ];
 	then 		
-		echo " $output_name is ok !"
+		echo " $output_name.flv is ok !"
 	else
-		echo " $output_name is filed !"
+		echo " $output_name.flv is filed !"
 	fi
 	cd ..
 
 #	clear the buffer file
-#rm -f meta.html
-#rm -f meta1.txt
-#rm -f meta2.txt
+rm -f meta.html
+rm -f meta1.txt
+rm -f meta2.txt
+rm -fr ./video
